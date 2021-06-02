@@ -2,8 +2,11 @@ package com.zup.cartao.proposta;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,8 +33,9 @@ public class Proposta {
     private String nome;
     private String endereco;
     private Double salario;
+    @Enumerated(EnumType.STRING)
     private SituacaoCartao situacao;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Cartao cartao;
     
     @Deprecated
@@ -113,8 +117,8 @@ public class Proposta {
         return this.cartao;
     }
 
-    public void setCartao(Cartao cartao) {
-        this.cartao = cartao;
+    public void criaCartao(String id) {
+        this.cartao = new Cartao(id);
     }
 
 

@@ -1,8 +1,11 @@
 package com.zup.cartao.cartao;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,15 +17,16 @@ public class BloqueioCartao {
     private String id;
     private String ip;
     private String userAgent;
+    @Enumerated(EnumType.STRING)
     private Bloqueio bloqueio;
 
-
-    public BloqueioCartao(Bloqueio bloqueio, String ip, String userAgent) {
-        this.ip = ip;
-        this.userAgent = userAgent;
-        this.bloqueio = bloqueio;
+    @Deprecated
+    public BloqueioCartao(){
     }
 
+    public BloqueioCartao(Bloqueio bloqueio) {
+        this.bloqueio = bloqueio;
+    }
 
     public String getId() {
         return this.id;

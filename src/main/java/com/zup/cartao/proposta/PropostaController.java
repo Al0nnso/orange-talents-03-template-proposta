@@ -7,6 +7,10 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.zup.cartao.cartao.Cartao;
+import com.zup.cartao.cartao.CartaoClient;
+import com.zup.cartao.cartao.CartaoRepository;
+import com.zup.cartao.cartao.CartaoResponse;
 import com.zup.cartao.error.ErrorMessage;
 import com.zup.cartao.restricao.Restricao;
 import com.zup.cartao.restricao.RestricaoClient;
@@ -15,6 +19,7 @@ import com.zup.cartao.restricao.Situacao;
 import com.zup.cartao.restricao.SituacaoCartao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,21 +34,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/propostas")
 public class PropostaController {
 	
-	private PropostaRepository repository;
+	@Autowired
+	private PropostaRepository propostaRepository;
 	
 	@Autowired
 	private RestricaoClient restricaoClient;
 
-	public PropostaController(PropostaRepository repository) {
-		this.repository = repository;
-	}
+	@Autowired
+	private CartaoClient cartaoClient;
 
 	@PostMapping
 	@Transactional
 	public ResponseEntity<?> criaNovaProposta(@RequestBody @Valid CriaNovaPropostaRequest request, UriComponentsBuilder uriBuilder) throws Exception{
 		Proposta proposta = request.toModel();
 
-		if(repository.existsByDocumento(proposta.getDocumento())){
+		if(propostaRepository.existsByDocumento(proposta.getDocumento())){
 			return ResponseEntity.unprocessableEntity().build();
 		}
 
@@ -53,17 +58,21 @@ public class PropostaController {
 		proposta.setSituacao(restricaoResponse.getBody());
 
 		if(proposta.getSituacao()==SituacaoCartao.ELEGIVEL){
-			
+			ResponseEntity<CartaoResponse> cartaoResponse = cartaoClient.cria(proposta);
+			System.out.println(cartaoResponse.getStatusCode());
+			if(cartaoResponse.getStatusCode() == HttpStatus.CREATED){
+				proposta.criaCartao(cartaoResponse.getBody().getId());
+			}
 		}
 
-		repository.save(proposta);
+		propostaRepository.save(proposta);
 
 		return ResponseEntity.created(uriBuilder.path("/propostas/{id}").build(proposta.getId())).build();
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> retornaProposta(@PathVariable Long id){
-		Optional<Proposta> proposta = repository.findById(id);
+		Optional<Proposta> proposta = propostaRepository.findById(id);
 
 		if(proposta.isPresent()){
 			return ResponseEntity.ok(proposta.get());

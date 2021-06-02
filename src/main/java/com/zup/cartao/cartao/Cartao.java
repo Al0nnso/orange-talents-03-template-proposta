@@ -4,6 +4,8 @@ package com.zup.cartao.cartao;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import com.zup.cartao.biometria.Biometria;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
@@ -14,33 +16,38 @@ import java.util.UUID;
 public class Cartao {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
-    @Column(nullable = false)
-    private String idCartao;
-    private BloqueioCartao bloqueio;
+    @OneToOne
+    private BloqueioCartao bloqueioCartao;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Biometria biometria;
 
+    @Deprecated
     public Cartao() {
     }
 
-    public Cartao(String idCartao) {
-
-        this.idCartao = idCartao;
-        //this.bloqueioCartao = new BloqueioCartao(CartaoBloqueado.NÃO);
+    public Cartao(String id) {
+        this.id = id;
     }
-
 
     public String getId() {
         return id;
     }
 
-    public String getIdCartao() {
-        return idCartao;
+    public BloqueioCartao getBloqueio() {
+        return this.bloqueioCartao;
     }
 
-    public BloqueioCartao getBloqueio() {
-        return this.bloqueio;
+    public void setBloqueio(BloqueioCartao bloqueio) {
+        this.bloqueioCartao=bloqueio;
+    }
+
+    public void setBiometria(Biometria biometria) {
+        this.biometria=biometria;
+    }
+
+    public Biometria getBiometria() {
+        return this.biometria;
     }
 
 }

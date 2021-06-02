@@ -29,15 +29,15 @@ public class CartaoController {
     @Transactional
     public ResponseEntity<?> bloquear(@PathVariable("id") String id, HttpServletRequest request){
         Optional<Cartao> cartao = cartaoRespository.findById(id);
-        String ip = request.getRemoteAddr();
-        String userAgent = request.getHeader("User-Agent");
 
         if(cartao.isPresent()){
             if(cartao.get().getBloqueio().getBloqueio()==Bloqueio.SIM){
                 ErrorMessage error = new ErrorMessage("Error","O cartão já está bloqueado");
                 return ResponseEntity.unprocessableEntity().body(error);
             }
-            BloqueioCartao bloqueio = new BloqueioCartao(Bloqueio.SIM,ip,userAgent);
+            BloqueioCartao bloqueio = new BloqueioCartao(Bloqueio.SIM);
+            bloqueio.setId(request.getRemoteAddr());
+            bloqueio.setUserAgent(request.getHeader("User-Agent"));
         }
         //ErrorMessage error = new ErrorMessage("Error","O cartão não existe");
         return ResponseEntity.notFound().build();
