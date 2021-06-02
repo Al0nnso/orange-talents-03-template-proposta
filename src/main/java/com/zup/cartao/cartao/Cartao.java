@@ -19,11 +19,7 @@ public class Cartao {
     private String id;
     @Column(nullable = false)
     private String idCartao;
-    //@OneToMany(cascade = CascadeType.ALL)
-    //private List<Biometria> biometrias= new ArrayList<>();
-
-    //@OneToOne(cascade = CascadeType.ALL)
-    //private BloqueioCartao bloqueioCartao;
+    private BloqueioCartao bloqueio;
 
     public Cartao() {
     }
@@ -43,16 +39,8 @@ public class Cartao {
         return idCartao;
     }
 
-    /*public List<Biometria> getBiometrias() {
-        return biometrias;
+    public BloqueioCartao getBloqueio() {
+        return this.bloqueio;
     }
-
-    public BloqueioCartao getBloqueioCartao() {
-        return bloqueioCartao;
-    }
-
-    public void adicionaBiometria(Biometria biometria){
-        this.biometrias.add(biometria);
-    }*/
 
 }

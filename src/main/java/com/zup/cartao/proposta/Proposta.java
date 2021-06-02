@@ -7,9 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zup.cartao.cartao.Cartao;
 import com.zup.cartao.restricao.Restricao;
+import com.zup.cartao.restricao.RestricaoResponse;
+import com.zup.cartao.restricao.Situacao;
+import com.zup.cartao.restricao.SituacaoCartao;
 
 @Entity
 public class Proposta {
@@ -18,16 +23,16 @@ public class Proposta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-    @JsonProperty @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String documento;
-    @JsonProperty @Column(nullable = false)
+    @Column(nullable = false)
     private String email;
-    @JsonProperty
     private String nome;
-    @JsonProperty
     private String endereco;
-    @JsonProperty
     private Double salario;
+    private SituacaoCartao situacao;
+    @OneToOne
+    private Cartao cartao;
     
     @Deprecated
     Proposta(){
@@ -89,6 +94,27 @@ public class Proposta {
 
     public void setSalario(Double salario) {
         this.salario = salario;
+    }
+
+    public void setSituacao(RestricaoResponse restricaoResponse){
+        System.out.println(restricaoResponse.getSituacao());
+        if(restricaoResponse.getSituacao()==Situacao.COM_RESTRICAO){
+            this.situacao = SituacaoCartao.NAO_ELEGIVEL;
+        }
+        this.situacao = SituacaoCartao.ELEGIVEL;
+    }
+
+    public SituacaoCartao getSituacao() {
+        return situacao;
+    }
+
+
+    public Cartao getCartao() {
+        return this.cartao;
+    }
+
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
     }
 
 

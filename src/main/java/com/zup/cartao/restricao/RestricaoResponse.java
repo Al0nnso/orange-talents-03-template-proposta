@@ -4,14 +4,14 @@ public class RestricaoResponse {
 
     private String documento;
     private String nome;
-    private Situacao resultadoSolicitacao;
+    private Situacao situacao;
     private Long idProposta;
 
 
-    public RestricaoResponse(String documento, String nome, Situacao resultadoSolicitacao, Long idProposta) {
+    public RestricaoResponse(String documento, String nome, Situacao situacao, Long idProposta) {
         this.documento = documento;
         this.nome = nome;
-        this.resultadoSolicitacao = resultadoSolicitacao;
+        this.situacao = situacao;
         this.idProposta = idProposta;
     }
 
@@ -25,6 +25,10 @@ public class RestricaoResponse {
 
     public Long getIdProposta() {
         return this.idProposta;
+    }
+
+    public Situacao getSituacao() {
+        return this.situacao;
     }
     
 }

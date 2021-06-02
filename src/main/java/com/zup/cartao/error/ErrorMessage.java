@@ -9,8 +9,8 @@ public class ErrorMessage {
 
     public ErrorMessage(){}
 
-    public ErrorMessage(Date timestamp,String title, String message){
-        this.timestamp = timestamp;
+    public ErrorMessage(String title, String message){
+        this.timestamp = new Date();
         this.title = title;
         this.message = message;
     }

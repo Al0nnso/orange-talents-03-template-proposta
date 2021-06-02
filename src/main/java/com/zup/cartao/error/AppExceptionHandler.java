@@ -22,12 +22,12 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler{
 
         @ExceptionHandler(Exception.class)
         public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-            ErrorMessage error = new ErrorMessage(new Date(),"Server Error", ex.getLocalizedMessage());
+            ErrorMessage error = new ErrorMessage("Server Error", ex.getLocalizedMessage());
             return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         @Override
         protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-            ErrorMessage error = new ErrorMessage(new Date(),"Validation Error",ex.getBindingResult().getFieldError().getDefaultMessage());
+            ErrorMessage error = new ErrorMessage("Validation Error",ex.getBindingResult().getFieldError().getDefaultMessage());
             return new ResponseEntity(error, HttpStatus.UNAUTHORIZED);
         }
         

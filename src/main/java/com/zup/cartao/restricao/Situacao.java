@@ -1,5 +1,5 @@
 package com.zup.cartao.restricao;
 
 public enum Situacao {
-    ELEGIVEL,NAO_ELEGIVEL;
+    COM_RESTRICAO,SEM_RESTRICAO
 }
